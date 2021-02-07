@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<title>CSC CA2</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
+<script src="/script.js" defer></script>
+<style>
+</style>
+
+<body>
+
+    <!-- Sidebar (hidden by default) -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="talents.html">TalentHub</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/talents.html">Talents</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/subscribe.html">Subscription</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="/login.html">Login<span class="sr-only">(current)</span></a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      
+
+    <!-- !PAGE CONTENT! -->
+    <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:50px">
+
+        <div class="row">
+            <form class="w-50">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
+                        placeholder="Enter email">
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Password">
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="loginUser()">Login</button>
+                <button type="button" class="btn btn-outline-primary" onclick="goToRegister()">Register</a></button>
+        
+                <div class="error-msg" style="color:red"></div>
+            </form>
+
+            <div class="spinner-border d-none" role="status" id="spinner">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <link rel="stylesheet" type="text/css"
+                href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+        </div>
+
+
+
+        <!-- <button type="button"  onclick="goToTest()">Go to test.html</button> -->
+    </div>
+
+    <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+
+    <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-analytics.js"></script>
+
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+
+    <script>
+        // Script to open and close sidebar
+        function w3_open() {
+            document.getElementById("mySidebar").style.display = "    block";
+        }
+
+        function w3_close() {
+            document.getElementById("mySidebar").style.display = "none";
+        }
+
+        // TODO: Replace the following with your app's Firebase project configuration
+        var firebaseConfig = {
+            apiKey: "",
+            authDomain: "",
+            projectId: "",
+            storageBucket: "",
+            messagingSenderId: "",
+            appId: "",
+            measurementId: ""
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        signOut()
+
+        function signOut() {
+            firebase.auth().signOut().then(function () {
+                console.dir("Sign out")
+            }).catch(function (error) {
+                // An error happened.
+            });
+        }
+
+        function goToRegister() {
+            window.location.href = '/register.html';
+        }
+
+        function loginUser() {
+            var email = $("#email").val()
+            var password = $("#password").val()
+
+            console.dir(email + ">>" + password);
+
+            firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+
+                $('.error-msg').text(errorMessage);
+                console.log("Error message: " + errorMessage);
+            });
+        }
+
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                // User is signed in.
+                var email = user.email;
+                var userUID = user.uid;
+                $('#spinner').removeClass('d-none');
+                firebase.auth().currentUser.getIdToken(true).then(function (idToken) {
+                    $.ajax({
+                        url: "/verifyToken",
+                        type: "GET",
+                        contentType: "application/json",
+                        dataType: "json",
+                        headers: {
+                            Authorization: idToken,
+                            UserUID: userUID
+                        },
+                        success: function (result) {
+                            if (result.status == 200) {
+                                //storeMemberId(email)
+                                var userEmail = localStorage.setItem('userEmail', email);
+                                window.location.href = "/talents.html";
+                            }
+                        },
+                        error(xhr, textStatus, err) {
+                            console.log(err);
+                            window.alert("Error");
+                        }
+                    });
+
+                }).catch(function (error) {
+                    console.log("Error: " + error);
+                });
+
+            } else {
+                console.dir("User is sign out");
+
+                $.ajax({
+                    url: "/verifyToken",
+                    type: "GET",
+                    contentType: "application/json",
+                    dataType: "json",
+                    headers: {
+                        Authorization: null,
+                        UserUID: null
+                    },
+                    success: function (result) {
+                        if (result.status == 200) {
+                            console.dir("STAT 200");
+                        }
+                    },
+                    error(xhr, textStatus, err) {
+                        console.log(err);
+                        window.alert("Error");
+                    }
+
+                });
+            }
+        });
+
+        function storeMemberId() {
+            $.ajax({
+                url: "/getMemberIdByEmail",
+                type: "GET",
+                async: false,
+                contentType: "application/json",
+                dataType: "json",
+                success: function (result) {
+                    if (result.status == 200) {
+                        var userEmail = localStorage.setItem('memberId', result.id);
+                        window.location.href = "/talents.html";
+                    }
+                },
+                error(xhr, textStatus, err) {
+                    console.log(err);
+                    window.alert("Error");
+                }
+            });
+        }
+
+
+        function goToTest() {
+            window.location.href = '/test.html'
+        }
+    </script>

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html>
+<title>CSC CA2</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.css"
+  integrity="sha512-NXUhxhkDgZYOMjaIgd89zF2w51Mub53Ru3zCNp5LTlEzMbNNAjTjDbpURYGS5Mop2cU4b7re1nOIucsVlrx9fA=="
+  crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"
+  integrity="sha512-lOrm9FgT1LKOJRUXF3tp6QaMorJftUjowOWiDcG5GFZ/q7ukof19V0HKx/GWzXCdt9zYju3/KhBNdCLzK8b90Q=="
+  crossorigin="anonymous"></script>
+<!-- scripts for aws api gateway include after you create your package from aws for api gateway. -->
+<script type="text/javascript" src="lib/axios/dist/axios.standalone.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/rollups/hmac-sha256.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/rollups/sha256.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/components/hmac.js"></script>
+<script type="text/javascript" src="lib/CryptoJS/components/enc-base64.js"></script>
+<script type="text/javascript" src="lib/url-template/url-template.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/sigV4Client.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/apiGatewayClient.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/simpleHttpClient.js"></script>
+<script type="text/javascript" src="lib/apiGatewayCore/utils.js"></script>
+<script type="text/javascript" src="apigClient.js"></script>
+<style>
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Karma", sans-serif
+  }
+
+  .w3-bar-block .w3-bar-item {
+    padding: 20px
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* Float four columns side by side */
+  .column {
+    float: left;
+    width: 25%;
+    padding: 0 10px;
+    padding-bottom: 3em;
+  }
+
+  /* Remove extra left and right margins, due to padding */
+  .row {
+    margin: 0 -5px;
+  }
+
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+
+  /* Style the counter cards */
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 16px;
+    text-align: center;
+    background-color: #f1f1f1;
+  }
+
+  .card img {
+    width: 100%;
+    padding-bottom: 2em;
+  }
+
+  /* start of modal */
+
+  .modal_row {
+    padding-bottom: 0 !important;
+  }
+
+  .modal_imagerow {
+    padding-left: 20px !important;
+    padding-bottom: 0 !important;
+  }
+
+  .modal_title {
+    text-align: left;
+    padding-left: 37px !important;
+    padding-bottom: 0 !important;
+  }
+
+  .modal_field {
+    margin: 0 auto;
+  }
+
+  #updateForm .card-header {
+    background-color: #007BFF !important;
+    color: #ffffff !important;
+  }
+
+  #deleteForm .card-header {
+    background-color: #DC3545 !important;
+    color: #ffffff !important;
+  }
+
+  .btn_row {
+    padding-top: 10px;
+  }
+
+  #addForm #addThumbnailLabel {
+    text-align: left;
+    overflow: hidden;
+  }
+
+  .update_btn {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+</style>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="talents.html">TalentHub</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/talents.html">Talents<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/subscribe.html">Subscription</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/login.html">Login</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- !PAGE CONTENT! -->
+  <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:50px">
+
+    <div class="row">
+      <div class="col-md-3">
+        <img id="profileImage" width="200px" src="" alt="No Image Available" style="border: 1px solid;">
+      </div>
+      <div class="col-md-9">
+        <div class="form-group row w-100">
+          <label for="Company" class="col-sm-2 col-form-label">Name:</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="name" value="">
+          </div>
+        </div>
+
+        <div class="form-group row w-100">
+          <label for="shortname" class="col-sm-2 col-form-label">Short Name:</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="shortname" value="">
+          </div>
+        </div>
+
+        <div class="form-group row w-100">
+          <label for="reknown" class="col-sm-2 col-form-label">Reknown:</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="reknown" value="">
+          </div>
+        </div>
+
+        <div class="form-group row w-100">
+          <label for="bio" class="col-sm-2 col-form-label">Bio:</label>
+          <div class="col-sm-10">
+            <textarea readonly class="form-control-plaintext" style="resize: none;" id="bio" value=""></textarea>
+          </div>
+        </div>
+
+        <div class="row btn_row">
+          <button type="button" class="btn btn-primary update_btn" onclick="onUpdateButtonClick(event)"
+            pid="{{objectID}}">Update</button>
+          <button type="button" class="btn btn-danger delete_btn" onclick="onDeleteButtonClick(event)"
+            pid="{{objectID}}">Delete</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Update modal-->
+    <form id="updateForm">
+      <div class="modal fade" id="updateModal" role="dialog">
+        <div class="modal-dialog" id="customPositionModal">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="card">
+              <div class="card-header">
+                <!-- X button to close modal -->
+                <button type="button" class="close" id="updateCloseModal">&times;</button>
+                <!-- Title -->
+                <h4 class="modal-title">Update Talent</h4>
+              </div>
+              <!-- Input form-->
+
+              <!-- Name -->
+              <div class="row modal_row">
+                <div class="col-sm-12 modal_title">
+                  <label class="col-form-label" for="updateNameInput">Name</label>
+                </div>
+                <div class="col-sm-11 modal_field">
+                  <input class="form-control" id="updateNameInput" name="updateNameInput">
+                </div>
+              </div>
+
+              <!-- Short Name -->
+              <div class="row modal_row">
+                <div class="col-sm-12 modal_title">
+                  <label class="col-form-label" for="updateShortNameInput">Short Name</label>
+                </div>
+                <div class="col-sm-11 modal_field">
+                  <input class="form-control" id="updateShortNameInput" name="updateShortNameInput">
+                </div>
+              </div>
+
+              <!-- Reknown -->
+              <div class="row modal_row">
+                <div class="col-sm-12 modal_title">
+                  <label class="col-form-label" for="updateReknownInput">Reknown</label>
+                </div>
+                <div class="col-sm-11 modal_field">
+                  <input class="form-control" id="updateReknownInput" name="updateReknownInput">
+                </div>
+              </div>
+
+              <!-- Bio -->
+              <div class="row modal_row">
+                <div class="col-sm-12 modal_title">
+                  <label class="col-form-label" for="updateBioInput">Bio</label>
+                </div>
+                <div class="col-sm-11 modal_field">
+                  <textarea class="form-control" id="updateBioInput" name="updateBioInput" rows="5"></textarea>
+                </div>
+              </div>
+
+              <!-- ImageUrl -->
+              <div class="row modal_row">
+
+                <div class="col-sm-11 modal_field">
+                  <textarea class="form-control" id="updateImageUrlInput" name="updateImageUrlInput" rows="5"
+                    hidden></textarea>
+                </div>
+              </div>
+
+              <!-- Update and back buttons -->
+              <div class="btn_row">
+                <button type="button" id="updateBtn" class="btn btn-primary">
+                  Update
+                </button>
+                <button type="button" data-dismiss="modal" class="btn btn-danger">
+                  Back
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+
+    <!-- Delete Modal -->
+    <form id="deleteForm">
+      <div class="modal fade" id="deleteModal" role="dialog">
+        <div class="modal-dialog" id="customPositionModal">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="card">
+              <div class="card-header">
+                <button type="button" class="close" id="deleteCloseModal">&times;</button>
+                <h4 class="modal-title" style="text-align:center">Are you sure?</h4>
+              </div>
+              <span class="fa fa-times" style="font-size:100px;color:#DC3545;text-align:center"></span>
+              <div id="deleteSummary" style="text-align:center"></div>
+              <div style="text-align:center;color:lightslategray">Delete profile?</div>
+              <input type="hidden" id="rid" value="" />
+              <input type="hidden" id="lid" value="" />
+              <label class="control-label col-md-1"></label>
+              <div style="display:inline-block; text-align:center">
+                <button type="button" id="deleteBtn" class="btn btn-outline-danger">
+                  Yes
+                </button>
+                <button id="deleteModal_No" type="button" data-dismiss="modal" class="btn btn-danger">
+                  No
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</body>
+<script src="https://cdn.jsdelivr.net/gh/recombee/js-api-client@3.0.0/dist/recombee-api-client.min.js"></script>
+
+</html>
+
+
+
+<script>
+  var client = new recombee.ApiClient('csc-dev-prod', 'NNay4h46xAhq7Cpn2o4AfCJcqN4RfcYBkNbmGUgJYSSGzLiJgViUGckqABTKeR1Y');
+
+  $(function () {
+    var profileId;
+
+    $('#updateCloseModal').on('click', function () {
+      $('#updateModal').modal('hide');
+    });
+
+    $('#deleteCloseModal').on('click', function () {
+      $('#deleteModal').modal('hide');
+    });
+
+
+    $('#deleteModal').on('hidden.bs.modal', function (e) {
+      $("#deleteForm").get(0).reset();
+      $("#deleteSummary").html("");
+    });
+  });
+
+  function onUpdateButtonClick(evt) {
+    var trigger = $(evt.target)
+
+    //open the modal
+    $("#updateModal").modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+    //set the id into a hiddent input
+    $('#pid').val(profileId);
+
+  }
+
+  function onDeleteButtonClick(evt) {
+    var trigger = $(evt.target)
+    //retrieve the record id and language id
+
+    //open the modal
+    $("#deleteModal").modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+    //set the id into a hiddent input
+    $('#pid').val(profileId);
+
+  }
+
+  $('#updateBtn').on('click', function () {
+    if (validateUpdateForm() == true)
+      updateProfile(profileId);
+  });
+
+  $('#deleteBtn').on('click', function () {
+    deleteProfile(profileId);
+  });
+
+  function validateUpdateForm() {
+    var name = document.forms["updateForm"]["updateNameInput"].value;
+    var shortname = document.forms["updateForm"]["updateShortNameInput"].value;
+    var reknown = document.forms["updateForm"]["updateReknownInput"].value;
+    var bio = document.forms["updateForm"]["updateBioInput"].value;
+
+    var messages = [];
+    if (name == "") {
+      messages.push("Name must be filled out");
+    }
+
+    if (shortname == "") {
+      messages.push("Short Name must be filled out");
+    }
+
+    if (reknown == "") {
+      messages.push("Reknown must be filled out");
+    }
+
+    if (bio == "") {
+      messages.push("Bio must be filled out");
+    }
+
+    if (messages.length > 0) {
+      messages.forEach(function (entry) {
+        new Noty({
+          theme: 'bootstrap-v3',
+          text: entry,
+          layout: 'bottomRight',
+          timeout: 3000,
+          progressBar: false,
+          type: 'error',
+        }).show();
+      })
+      return false;
+    } else {
+      return true;
+    }
+
+  }
+
+  function updateProfile(ProfileId) {
+    var name = $("#updateNameInput").val()
+    var shortname = $("#updateShortNameInput").val()
+    var reknown = $("#updateReknownInput").val()
+    var bio = $("#updateBioInput").val()
+    var imageurl = $("#updateImageUrlInput").val()
+
+    var DATA = {
+      "name": name,
+      "shortname": shortname,
+      "reknown": reknown,
+      "bio": bio
+    }
+
+    $.ajax({
+      type: 'PUT',
+      url: '/updateProfile/' + ProfileId,
+      data: DATA,
+      dataType: 'json',
+      contentType: 'application/x-www-form-urlencoded;charset=UTF-8',
+    }).done(function (data) {
+      document.getElementById("updateCloseModal").disabled = true;
+      //document.getElementById("deleteModal_No").disabled = true;
+      new Noty({
+        theme: 'bootstrap-v3',
+        text: "Profile was successfully updated",
+        layout: 'center',
+        progressBar: false,
+        type: 'success',
+        closeWith: [],
+        buttons: [
+          Noty.button('BACK', 'btn ', function () {
+            location.replace('/talents.html');
+          }, { class: 'btn btn-secondary', id: 'back_btn', 'data-status': 'ok' })
+        ]
+      }).show();
+    }).fail(function (data) {
+      console.dir(data.responseJSON);
+      if (data.responseJSON === undefined) {
+        window.location.href = '/login.html';
+      } else {
+        new Noty({
+          theme: 'bootstrap-v3',
+          text: data.responseJSON,
+          timeout: 5000,
+          layout: 'bottomRight',
+          type: 'error',
+        }).show();
+      }
+    });
+  }
+
+  function deleteProfile(ProfileId) {
+    $.ajax({
+      type: 'DELETE',
+      url: '/deleteProfile/' + ProfileId,
+      dataType: 'json',
+      contentType: 'application/x-www-form-urlencoded;charset=UTF-8',
+    }).done(function (data) {
+      document.getElementById("deleteCloseModal").disabled = true;
+      document.getElementById("deleteModal_No").disabled = true;
+      new Noty({
+        theme: 'bootstrap-v3',
+        text: "Profile was successfully deleted",
+        layout: 'center',
+        progressBar: false,
+        type: 'success',
+        closeWith: [],
+        buttons: [
+          Noty.button('BACK', 'btn ', function () {
+            location.replace('/talents.html');
+          }, { class: 'btn btn-secondary', id: 'back_btn', 'data-status': 'ok' })
+        ]
+      }).show();
+    }).fail(function (data) {
+      console.dir(data.responseJSON);
+      if (data.responseJSON === undefined) {
+        window.location.href = '/login.html';
+      } else {
+        new Noty({
+          theme: 'bootstrap-v3',
+          text: data.responseJSON,
+          timeout: 5000,
+          layout: 'bottomRight',
+          type: 'error',
+        }).show();
+      }
+    });
+  }
+
+
+
+  let params = new URLSearchParams(document.location.search.substring(1));
+  let pid = params.get('pid');
+  getProfileDetails(pid)
+
+  function createJobApplication() {
+    var body = {
+      "memberemail": localStorage.getItem("userEmail"),
+      "pid": pid
+    }
+
+    $.ajax({
+      url: "http://localhost:8085/createJobApplication/",
+      type: "POST",
+      datatype: 'json',
+      contenttype: 'application/x-www-form-urlencoded',
+      data: body,
+      success: function (data, textStatus, xhr) {
+        console.log(data);
+
+        if (data != null) {
+          console.log("Created Job Application")
+        } else {
+          console.log("Error in retrieving...");
+        }
+      },
+      error(xhr, textStatus, err) {
+        console.log(err);
+        window.alert("Error");
+      }
+    });
+  }
+
+  function getProfileDetails(id) {
+    if (id != null) {
+      var apigClient = apigClientFactory.newClient();
+      var params = {
+        id: id
+      };
+
+      apigClient.profileGet(params)
+        .then(function (result) {
+          console.log(result.data);
+          var data = result.data;
+          if (data != null) {
+            let profile = data[0];
+            let name = profile.Name;
+            let shortname = profile.ShortName;
+            let reknown = profile.Reknown;
+            let bio = profile.Bio;
+            let thumbnailURL = profile.ImageURL;
+            profileId = profile.ProfileID;
+
+            //Profile page
+            $("#profileImage").attr("src", thumbnailURL);
+            $("#profileImage").attr("alt", name);
+            $("#name").val(name);
+            $("#shortname").val(shortname);
+            $("#reknown").val(reknown);
+            $("#bio").val(bio);
+            $("#bio").height($("#bio")[0].scrollHeight);
+
+            //Delete modal
+            let summary = $('#deleteSummary');
+            $summaryText = `Name: ${name}` + '<br/>' + `Reknown: ${reknown}`;
+            summary.html($summaryText);
+
+            //Update modal
+            $('#updateNameInput').val(name);
+            $('#updateShortNameInput').val(shortname);
+            $('#updateReknownInput').val(reknown);
+            document.getElementById("updateBioInput").value = bio;
+
+            client.send(new recombee.AddDetailView(localStorage.getItem('userEmail'), id));
+          }
+          // Add success callback code here.
+        }).catch(function (result) {
+          // Add error callback code here.
+          console.log(result);
+
+        });
+
+      /*
+      $.ajax({
+        url: "https://17qe0lc7kf.execute-api.us-east-1.amazonaws.com/cscca2/profile?id=" + id,
+        type: "GET",
+        contentType: "application/json",
+        headers: {
+          'x-api-key': 'ODrJNH44MD4gPmUGYkYXbZfbP8Ssx0K9Rnf4uaq0',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+          'Access-Control-Allow-Credentials': true,
+          'Content-Type': 'application/json'
+        },
+        dataType: "json",
+        success: function (data, textStatus, xhr) {
+          console.log(data);
+
+          if (data != null) {
+            let profile = data[0];
+            let name = profile.Name;
+            let shortname = profile.ShortName;
+            let reknown = profile.Reknown;
+            let bio = profile.Bio;
+            let thumbnailURL = profile.ImageURL;
+            profileId = profile.ProfileID;
+
+            //Profile page
+            $("#profileImage").attr("src", thumbnailURL);
+            $("#profileImage").attr("alt", name);
+            $("#name").val(name);
+            $("#shortname").val(shortname);
+            $("#reknown").val(reknown);
+            $("#bio").val(bio);
+            $("#bio").height($("#bio")[0].scrollHeight);
+
+            //Delete modal
+            let summary = $('#deleteSummary');
+            $summaryText = `Name: ${name}` + '<br/>' + `Reknown: ${reknown}`;
+            summary.html($summaryText);
+
+            //Update modal
+            $('#updateNameInput').val(name);
+            $('#updateShortNameInput').val(shortname);
+            $('#updateReknownInput').val(reknown);
+            document.getElementById("updateBioInput").value = bio;
+
+            client.send(new recombee.AddDetailView(localStorage.getItem('userEmail'), id));
+          } else {
+            console.log("Error in retrieving...");
+          }
+        },
+        error(xhr, textStatus, err) {
+          console.log(err);
+          window.alert("Error");
+        }
+      });
+      */
+    }
+  }
+</script>

@@ -1,0 +1,32 @@
+{
+  "name": "task6",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "algoliasearch": "^4.3.1",
+    "aws-api-gateway-client": "^0.3.6",
+    "aws-sdk": "^2.724.0",
+    "cors": "^2.8.5",
+    "cross-fetch": "^3.0.4",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "firebase": "^7.17.1",
+    "firebase-admin": "^9.0.0",
+    "formidable": "^1.2.2",
+    "fs": "0.0.1-security",
+    "instantsearch.js": "^4.7.0",
+    "jquery": "^3.5.1",
+    "jsdom": "^16.4.0",
+    "mysql": "^2.18.1",
+    "node-fetch": "^2.6.0",
+    "request": "^2.88.2",
+    "stripe": "^8.80.0",
+    "tailwindcss": "^1.4.6"
+  }
+}

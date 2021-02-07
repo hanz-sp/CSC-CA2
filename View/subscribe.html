@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<title>CSC CA2</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+  integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="/script.js" defer></script>
+<script src="https://js.stripe.com/v3/"></script>
+<link rel="stylesheet" href="./css/normalize.css" />
+<link rel="stylesheet" href="./css/global.css" />
+<!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+<!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-analytics.js"></script>
+<!-- Add Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+
+<style>
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Karma", sans-serif
+  }
+
+  .w3-bar-block .w3-bar-item {
+    padding: 20px
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  /* Float four columns side by side */
+  .column {
+    float: left;
+    width: 25%;
+    padding: 0 10px;
+    padding-bottom: 3em;
+  }
+
+  /* Remove extra left and right margins, due to padding */
+  .row {
+    margin: 0 -5px;
+  }
+
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+
+  /* Style the counter cards */
+  .card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 16px;
+    text-align: center;
+    background-color: #f1f1f1;
+  }
+
+  .card img {
+    width: 100%;
+    padding-bottom: 2em;
+  }
+</style>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="talents.html">TalentHub</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/talents.html">Talents</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/subscribe.html">Subscription<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item" id="log_nav">
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+
+  <!-- !PAGE CONTENT! -->
+  <div class="w3-main w3-content w3-padding" style="max-width:1200px;">
+    <div id="prices-and-payment" class="flex flex-wrap justify-center">
+      <div id="prices-form" class="md:w-1/3 w-full mr-4 md:mb-8">
+        <div class="text-center text-pasha font-bold text-2xl mt-4 mb-6">
+          Subscribe to a plan
+        </div>
+
+        <div class="flex justify-between mb-8">
+          <div id="basic" class="w-1/2 rounded overflow-hidden border rounded-md p-2 mr-4 md:mr-8">
+            <div class="px-2 py-2">
+              <div class="text-gray-500 text-xl mb-2 font-medium">
+                Comment
+              </div>
+              <p class="text-pasha text-2xl font-extrabold">
+                $20.00
+              </p>
+              <div class="flex-wrap">
+                <div class="leading-none text-gray-500 text-xs font-medium">
+                  Per Month
+                </div>
+                <div class="leading-none text-gray-500 text-xs font-medium mt-1">
+                  Billed Monthly
+                </div>
+              </div>
+
+              <div class="flex justify-center mt-6">
+                <button id="submit-basic" onClick="goToPaymentPage('basic')"
+                  class="bg-pasha hover:bg-white outline-none hover:text-pasha hover:border hover:border-black text-white focus:bg-white focus:text-pasha font-light py-2 px-4 rounded-lg"
+                  type="submit">
+                  <div id="submit-basic-button-text" class="w-auto -mx-2 md:mx-0">
+                    Select
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="payment-form" class="flex justify-center hidden">
+          <div class="w-full inline-block border p-4 rounded-md">
+            <div class="font-bold text-xl mb-2">
+              Enter your card details. </br>Your subscription will start now.
+            </div>
+            <p class="text-gray-700 text-base">
+              → Total due now <span id="total-due-now">$0.00</span>
+            </p>
+            <p id="price-selected" class="text-gray-700 text-base mb-4"></p>
+
+            <div class="w-full">
+              <div class="flex flex-wrap -mx-3 mb-2">
+                <div class="w-full px-3 md:mb-0">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                    for="grid-first-name">
+                    Full name
+                  </label>
+                  <input
+                    class="appearance-none block w-full bg-gray-200 border rounded-md py-3 px-2 mb-3 leading-tight focus:outline-none focus:bg-white"
+                    id="name" type="text" placeholder="First and last name" required />
+                </div>
+              </div>
+              <form id="payment-form">
+                <div class="flex flex-wrap -mx-3 mb-3">
+                  <div class="w-full px-3 mb-0">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                      for="grid-first-name">
+                      Card
+                    </label>
+                    <div
+                      class="appearance-none block w-full bg-gray-200 text-gray-700 border rounded-md py-3 px-2 leading-tight focus:outline-none focus:bg-white"
+                      id="card-element"></div>
+                    <div id="card-element-errors" class="text-gray-700 text-base mt-2" role="alert"></div>
+                  </div>
+                </div>
+                <button id="submit-premium"
+                  class="w-full bg-pasha hover:bg-white hover:shadow-outline hover:text-pasha hover:border hover:border-black focus:shadow-outline text-white focus:bg-white focus:text-pasha font-light py-2 px-4 rounded-md"
+                  type="submit">
+                  <div class="">
+                    <div id="loading" class="hidden">Subscribing...</div>
+                    <span id="button-text" class="">Subscribe</span>
+                  </div>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+
+</html>
+
+
+
+<script>
+  $.ajax({
+      url: "/checkCurrentUser/",
+      type: "GET",
+      success: function (data, textStatus, xhr) {
+        console.log("Data:" + data);
+
+        var logNav = document.getElementById('log_nav');
+        var login_btn = document.createElement('a');
+        login_btn.setAttribute('class', 'nav-link');
+
+        if (data === "") {
+          login_btn.setAttribute('href', "/login.html");
+          login_btn.textContent = "Login";
+        } else {
+          login_btn.textContent = data + " - Logout";
+          login_btn.addEventListener("click", logoutUser);
+        }
+
+        logNav.appendChild(login_btn);
+      },
+      error(xhr, textStatus, err) {
+        console.log(err);
+        window.alert("Error");
+      }
+    });
+
+    // TODO: Replace the following with your app's Firebase project configuration
+    var firebaseConfig = {
+      apiKey: "",
+      authDomain: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: "",
+      measurementId: ""
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    function logoutUser() {
+
+      firebase.auth().signOut().then(() => {
+        $.ajax({
+          url: "/resetToken/",
+          type: "PUT",
+          success: function (data, textStatus, xhr) {
+            console.log(data);
+            window.location = '/talents.html';
+          },
+          error(xhr, textStatus, err) {
+            console.log(err);
+            window.alert("An error occured while logging out");
+          }
+        });
+      }).catch((error) => {
+        new Noty({
+          theme: 'bootstrap-v3',
+          text: 'An error occured while logging out',
+          layout: 'bottomRight',
+          timeout: 3000,
+          progressBar: false,
+          type: 'error',
+        }).show();
+      });
+    }
+
+  
+</script>

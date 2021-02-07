@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<title>CSC CA2</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
+<script src="/script.js" defer></script>
+<style>
+
+</style>
+
+<body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="talents.html">TalentHub</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/talents.html">Talents</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/subscribe.html">Subscription</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/login.html">Login<span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- !PAGE CONTENT! -->
+    <div class="w3-main w3-content w3-padding bg-light" style="max-width:1200px;margin-top:50px;margin-bottom: 50px;">
+
+        <form class="w-50">
+            <div class="form-group">
+                <label for="Name">Name</label>
+                <input type="text" class="form-control" id="name" aria-describedby="Name" placeholder="Enter name">
+            </div>
+
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
+                    placeholder="Enter email">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                    else.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Password">
+            </div>
+
+            <div class="form-group">
+                <label for="Gender">Gender</label>
+                <div>
+                    <select class="form-control" name="gender-dropdown" id="gender-dropdown">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Unknown">Prefer not to say</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Age">Age</label>
+                <input type="number" step=1 class="form-control" id="Age" placeholder="">
+            </div>
+
+            <div class="form-group">
+                <label for="Citizenship">Citizenship</label>
+                <div>
+                    <select class="form-control" name="citizen-dropdown" id="citizen-dropdown">
+                        <option value="Singapore">Singapore</option>
+                        <option value="Malaysia">Malaysia</option>
+                        <option value="China">China</option>
+                    </select>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="registerUser()">Submit</button>
+        </form>
+
+    </div>
+
+    <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+
+    <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-analytics.js"></script>
+
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
+
+    <script>
+        // Script to open and close sidebar
+        function w3_open() {
+            document.getElementById("mySidebar").style.display = "    block";
+        }
+
+        function w3_close() {
+            document.getElementById("mySidebar").style.display = "none";
+        }
+
+
+        // TODO: Replace the following with your app's Firebase project configuration
+        var firebaseConfig = {
+            apiKey: "",
+            authDomain: "",
+            projectId: "",
+            storageBucket: "",
+            messagingSenderId: "",
+            appId: "",
+            measurementId: ""
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        function registerUser() {
+            var email = $("#email").val()
+            var password = $("#password").val()
+            var name = $("#name").val()
+            var gender = $("#gender-dropdown").val()
+            var citizenship = $("#citizen-dropdown").val()
+            var age = $("#Age").val()
+
+            console.dir(email + ">>" + password);
+
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then(function (user) {
+                    console.dir("HELLO: " + JSON.stringify(user));
+
+                    var body = {
+                        "email": email,
+                        "name": name,
+                        "gender": gender,
+                        "age": age,
+                        "citizenship": citizenship,
+                        "membershiptype": "Registered"
+                    }
+
+                    //console.dir(JSON.stringify(body));
+
+                    $.ajax({
+                        url: "/createMember/",
+                        type: "POST",
+                        contentType: "application/x-www-form-urlencoded",
+                        dataType: "json",
+                        data: body,
+                        success: function (result) {
+                            // Go to Login Page
+                            var body = {
+                                "id": user.user.uid
+                            }
+
+                            $.ajax({
+                                url: "/setUserClaims",
+                                type: "POST",
+                                async: false,
+                                contentType: "application/x-www-form-urlencoded",
+                                dataType: "json",
+                                data: body,
+                                success: function (result) {
+                                    // Go to Login Page
+                                    window.location.href = "/login.html";
+                                    console.dir("WENT HERE CLAIMS");
+                                },
+                                error(xhr, textStatus, err) {
+                                    console.log(err);
+                                    window.alert("Error");
+                                }
+
+                            });
+                            console.dir("WENT HERE");
+                        },
+                        error(xhr, textStatus, err) {
+                            console.log(err);
+                            window.alert("Error");
+                        }
+
+                    });
+
+                })
+                .catch(function (error) {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+
+                    $('.error-msg').text(errorMessage);
+                    console.log("Error message: " + errorMessage);
+                });
+        }
+    </script>
